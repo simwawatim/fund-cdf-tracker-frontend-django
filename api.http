@@ -31,8 +31,8 @@ POST http://127.0.0.1:8000/api/constituencies/v1/
 Content-Type: application/json
 
 {
-  "name": "Lusaka Central5",
-  "county": "Lusaka"
+  "name": "Lusaka Central6",
+  "district": "Lusaka"
 
 }
 
@@ -45,16 +45,12 @@ Accept: application/json
 ###
 
 ### Update constituency (PUT)
-PUT http://127.0.0.1:8000/api/constituencies/v1/1/
+PUT http://127.0.0.1:8000/api/constituencies/v1/10/
 Content-Type: application/json
 
 {
   "name": "Lusaka Central Updated",
-  "county": "Lusaka",
-  "population": 125000,
-  "contact_person": "Jane Doe",
-  "contact_email": "jane@example.com",
-  "contact_phone": "0976123456"
+  "county": "Lusaka"
 }
 
 ###

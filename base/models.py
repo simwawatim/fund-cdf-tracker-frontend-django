@@ -48,7 +48,7 @@ DOC_TYPES = (
 # ---------------------------
 class Constituency(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    county = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
     constituency_code = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -69,7 +69,6 @@ def constituency_detail(request, pk):
                             status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        item.is_active = False 
-        item.save()
+        item.delete()
         return Response({"status": "success", "message": "Constituency soft-deleted successfully."},
                         status=status.HTTP_200_OK)

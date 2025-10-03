@@ -1,0 +1,326 @@
+### Get JWT token
+POST http://127.0.0.1:8000/api/login/v1
+Content-Type: application/json
+
+{
+    "email": "timeastw@gmail.com",
+    "password": "lsSitEgI"
+}
+
+### Refresh JWT token
+POST http://127.0.0.1:8000/api/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "your_refresh_token_here"
+}
+
+
+### ---------------------------
+### Constituency Endpoints
+### ---------------------------
+
+### List all constituencies
+GET http://127.0.0.1:8000/api/constituencies/v1/
+Accept: application/json
+
+###
+
+### Create a new constituency
+POST http://127.0.0.1:8000/api/constituencies/v1/
+Content-Type: application/json
+
+{
+  "name": "Lusaka Central5",
+  "county": "Lusaka"
+
+}
+
+###
+
+### Get constituency details
+GET http://127.0.0.1:8000/api/constituencies/v1/1/
+Accept: application/json
+
+###
+
+### Update constituency (PUT)
+PUT http://127.0.0.1:8000/api/constituencies/v1/1/
+Content-Type: application/json
+
+{
+  "name": "Lusaka Central Updated",
+  "county": "Lusaka",
+  "population": 125000,
+  "contact_person": "Jane Doe",
+  "contact_email": "jane@example.com",
+  "contact_phone": "0976123456"
+}
+
+###
+
+### Partial update constituency (PATCH)
+PATCH http://127.0.0.1:8000/api/constituencies/v1/1/
+Content-Type: application/json
+
+{
+  "is_active": true
+}
+
+###
+
+### Delete (soft delete) constituency
+DELETE http://127.0.0.1:8000/api/constituencies/v1/1/
+
+### ---------------------------
+### UserProfile Endpoints
+### ---------------------------
+
+### List all user profiles
+GET http://127.0.0.1:8000/api/users/v1/
+Accept: application/json
+
+###
+
+### Create new user profile
+POST http://127.0.0.1:8000/api/users/v1/
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "fra001",
+    "email": "timeastw@gmail.com",
+    "first_name": "Francis",
+    "last_name": "Makwaza"
+  },
+  "role": "officer",
+  "phone": "0965123456",
+  "constituency": 1
+}
+
+###
+
+### Get user profile details
+GET http://127.0.0.1:8000/api/users/v1/2/
+Accept: application/json
+
+###
+
+### Update user profile (PUT)
+PUT http://127.0.0.1:8000/api/users/v1/2/
+Content-Type: application/json
+
+{
+  "user": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "username": "usersystem",
+    "email": "timeastw@gmail.com"
+  },
+  "role": "admin",
+  "phone": "0976123456",
+  "constituency": 1
+}
+
+###
+
+### Partial update user profile (PATCH)
+PATCH http://127.0.0.1:8000/api/users/v1/2/
+Content-Type: application/json
+
+{
+  "phone": "0987123456"
+}
+
+###
+
+### Delete user profile
+DELETE http://127.0.0.1:8000/api/users/v1/8/
+
+
+### ---------------------------
+### Project CRUD
+### ---------------------------
+
+### List all projects6GET http://127.0.0.1:8000/api/projects/v1/
+Accept: application/json
+
+###
+
+### Create a new project
+POST http://127.0.0.1:8000/api/projects/v1/
+Content-Type: application/json
+
+{
+  "name": "Lusaka Water Project",
+  "constituency": 1,
+  "project_type": "infrastructure",
+  "description": "Water supply improvement",
+  "allocated_budget": 5000000,
+  "status": "planned",
+  "start_date": "2025-10-01",
+  "end_date": "2026-03-01",
+  "beneficiaries_count": 5000,
+  "project_manager": "John Doe",
+  "funding_source": "CDF",
+  "location": "Lusaka",
+  "remarks": "Urgent priority"
+}
+
+###
+
+### Retrieve a project details
+GET http://127.0.0.1:8000/api/projects/v1/1/
+Accept: application/json
+
+###
+
+### Update a project (PUT)
+PUT http://127.0.0.1:8000/api/projects/v1/1/
+Content-Type: application/json
+
+{
+  "name": "Lusaka Water Project Updated",
+  "status": "in_progress",
+  "allocated_budget": 5200000
+}
+
+###
+
+### Partial update a project (PATCH)
+PATCH http://127.0.0.1:8000/api/projects/v1/1/
+Content-Type: application/json
+
+{
+  "status": "completed",
+  "completion_percentage": 100
+}
+
+###
+
+### Delete a project (soft delete)
+DELETE http://127.0.0.1:8000/api/projects/v1/1/
+
+### ---------------------------
+### Project Update / Progress
+### ---------------------------
+
+### List all updates
+GET http://127.0.0.1:8000/api/project-updates/v1/
+Accept: application/json
+
+###
+
+### Create a project update
+POST http://127.0.0.1:8000/api/project-updates/v1/
+Content-Type: application/json
+
+{
+  "project": 1,
+  "update_type": "progress",
+  "progress_percentage": 20,
+  "remarks": "Initial phase completed",
+  "updated_by": 1
+}
+
+###
+
+### Retrieve a project update
+GET http://127.0.0.1:8000/api/project-updates/v1/1/
+
+###
+
+### Update a project update
+PATCH http://127.0.0.1:8000/api/project-updates/v1/1/
+Content-Type: application/json
+
+{
+  "progress_percentage": 25
+}
+
+###
+
+### Delete a project update (soft delete)
+DELETE http://127.0.0.1:8000/api/project-updates/v1/1/
+
+### ---------------------------
+### Financial Report / Spending
+### ---------------------------
+
+### List all financial reports
+GET http://127.0.0.1:8000/api/financial-reports/v1/
+
+###
+
+### Create a financial report
+POST http://127.0.0.1:8000/api/financial-reports/v1/
+Content-Type: application/json
+
+{
+  "project": 1,
+  "description": "Purchased pipes and fittings",
+  "category": "Materials",
+  "amount_spent": 500000,
+  "reported_by": 1
+}
+
+###
+
+### Retrieve a financial report
+GET http://127.0.0.1:8000/api/financial-reports/v1/1/
+
+###
+
+### Update a financial report
+PATCH http://127.0.0.1:8000/api/financial-reports/v1/1/
+Content-Type: application/json
+
+{
+  "amount_spent": 550000
+}
+
+###
+
+### Delete a financial report (soft delete)
+DELETE http://127.0.0.1:8000/api/financial-reports/v1/1/
+
+### ---------------------------
+### Project Documents
+### ---------------------------
+
+### List all documents
+GET http://127.0.0.1:8000/api/project-documents/v1/
+
+###
+
+POST http://127.0.0.1:8000/api/project-documents/v1/
+Content-Type: application/json
+
+{
+  "project": 1,
+  "title": "Project Blueprint Online",
+  "doc_type": "report",
+  "file_url": "https://maritime.org/doc/pdf/blueprint.pdf",
+  "uploaded_by": 1
+}
+
+
+###
+
+### Retrieve a document
+GET http://127.0.0.1:8000/api/project-documents/v1/1/
+
+###
+
+### Update a document
+PATCH http://127.0.0.1:8000/api/project-documents/v1/1/
+Content-Type: application/json
+
+{
+  "title": "Updated Project Blueprint"
+}
+
+###
+
+### Delete a document (soft delete)
+DELETE http://127.0.0.1:8000/api/project-documents/v1/1/

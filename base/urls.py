@@ -2,6 +2,7 @@ from django.urls import path
 from api.views.project_views import financial_report_detail, financial_report_list, project_detail, project_document_detail, project_document_list, project_list, project_update_detail, project_update_list
 from api.views.user_views import userprofile_list, userprofile_detail
 from api.views.constituency_views import constituency_list, constituency_detail
+from api.views.program_view import program_list
 
 from api.views.auth_views import (
     login,
@@ -40,6 +41,11 @@ urlpatterns = [
     path('api/project-documents/v1/', project_document_list, name='project-document-list'),
     path('api/project-documents/v1/<int:pk>/', project_document_detail, name='project-document-detail'),
 
+    # ---------------------------
+    # Program URLs
+    # ---------------------------
+
+    path('api/program/v1', program_list),
 
     # JWT auth endpoints
     path('api/login/v1', login, name='custom-login'),

@@ -320,3 +320,23 @@ Content-Type: application/json
 
 ### Delete a document (soft delete)
 DELETE http://127.0.0.1:8000/api/project-documents/v1/1/
+
+
+### ---------------------------
+### Program Endpoints
+### ---------------------------
+
+
+### Retrieve list of programs
+GET http://127.0.0.1:8000/api/program/v1
+Accept: application/json
+
+
+### Create a program
+POST http://127.0.0.1:8000/api/program/v1
+Content-Type: application/json
+
+{
+  "name": "skill & development",
+  "description": "Purchased pipes and fittings"
+}

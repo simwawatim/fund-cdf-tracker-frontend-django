@@ -189,3 +189,11 @@ class ProjectDocument(models.Model):
 
     def __str__(self):
         return f"{self.project.name} - {self.title}"
+    
+
+class Program(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name

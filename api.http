@@ -84,14 +84,14 @@ Content-Type: application/json
 
 {
   "user": {
-    "username": "fra001",
+    "username": "fra0011",
     "email": "timeastw@gmail.com",
     "first_name": "Francis",
     "last_name": "Makwaza"
   },
   "role": "officer",
   "phone": "0965123456",
-  "constituency": 1
+  "constituency": 8
 }
 
 ###

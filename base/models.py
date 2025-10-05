@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Choice Options
 # ---------------------------
 STATUS_CHOICES = (
-    ('planned', 'Planned'),
+    ('pending', 'Pending'),
     ('ongoing', 'Ongoing'),
     ('completed', 'Completed'),
 )
@@ -42,6 +42,14 @@ DOC_TYPES = (
     ('photo', 'Photo'),
     ('other', 'Other'),
 )
+
+class Program(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
 
 # ---------------------------
 # Constituency Model
@@ -95,11 +103,11 @@ class UserProfile(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=200)
     constituency = models.ForeignKey(Constituency, on_delete=models.CASCADE, related_name='projects')
-    project_type = models.CharField(max_length=50, choices=PROJECT_TYPES, default='infrastructure')
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, null=True, blank=True)
     description = models.TextField()
     allocated_budget = models.DecimalField(max_digits=12, decimal_places=2)
     actual_expenditure = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='planned')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     completion_percentage = models.PositiveSmallIntegerField(default=0)
@@ -191,9 +199,3 @@ class ProjectDocument(models.Model):
         return f"{self.project.name} - {self.title}"
     
 
-class Program(models.Model):
-    name = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name

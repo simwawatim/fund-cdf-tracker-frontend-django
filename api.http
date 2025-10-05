@@ -138,7 +138,8 @@ DELETE http://127.0.0.1:8000/api/users/v1/8/
 ### Project CRUD
 ### ---------------------------
 
-### List all projects6GET http://127.0.0.1:8000/api/projects/v1/
+### List all projects
+GET http://127.0.0.1:8000/api/projects/v1/
 Accept: application/json
 
 ###
@@ -148,18 +149,14 @@ POST http://127.0.0.1:8000/api/projects/v1/
 Content-Type: application/json
 
 {
-  "name": "Lusaka Water Project",
-  "constituency": 1,
-  "project_type": "infrastructure",
+  "name": "Lusaka Water Project00",
+  "constituency": 3,
+  "program": 1,
   "description": "Water supply improvement",
   "allocated_budget": 5000000,
-  "status": "planned",
   "start_date": "2025-10-01",
   "end_date": "2026-03-01",
   "beneficiaries_count": 5000,
-  "project_manager": "John Doe",
-  "funding_source": "CDF",
-  "location": "Lusaka",
   "remarks": "Urgent priority"
 }
 

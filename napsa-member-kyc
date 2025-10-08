@@ -1,0 +1,3 @@
+curl -X GET "https://integrationsuat.napsa.co.zm/icare-thirdparty/memberKyc/12345678" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+-H "Content-Type: application/json"

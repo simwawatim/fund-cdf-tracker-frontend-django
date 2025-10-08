@@ -358,3 +358,51 @@ Accept: application/json
 ### Delete a programs
 DELETE http://127.0.0.1:8000/api/programs/v1/1
 Accept: application/json
+
+
+### Get all comments for a project (project_id = 1)
+GET http://127.0.0.1:8000/api/comments/?project=1
+Content-Type: application/json
+
+###
+
+### Create a new comment for a project (project_id = 1)
+POST http://127.0.0.1:8000/api/comments/
+Content-Type: application/json
+
+{
+    "project": 61,
+    "message": "This is a test comment from REST client"
+}
+
+###
+
+### Get a single comment by ID (comment_id = 5)
+GET http://127.0.0.1:8000/api/comments/5/
+Content-Type: application/json
+
+###
+
+### Update a comment (comment_id = 5)
+PUT http://127.0.0.1:8000/api/comments/5/
+Content-Type: application/json
+
+{
+    "message": "Updated comment text"
+}
+
+###
+
+### Partially update a comment (comment_id = 5)
+PATCH http://127.0.0.1:8000/api/comments/5/
+Content-Type: application/json
+
+{
+    "message": "Partial update comment"
+}
+
+###
+
+### Delete a comment (soft delete, comment_id = 5)
+DELETE http://127.0.0.1:8000/api/comments/5/
+Content-Type: application/json

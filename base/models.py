@@ -199,3 +199,27 @@ class ProjectDocument(models.Model):
         return f"{self.project.name} - {self.title}"
     
 
+
+# ---------------------------
+# Project Messages / Comments
+# ---------------------------
+class ProjectComment(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_comments')
+    message = models.TextField()
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='replies'
+    ) 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.project.name}"

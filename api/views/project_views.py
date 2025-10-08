@@ -117,12 +117,12 @@ def project_update_list(request):
 @permission_classes([AllowAny])
 def project_update_detail(request, pk):
     try:
-        update = ProjectUpdate.objects.get(pk=pk, is_active=True)
+        update = ProjectUpdate.objects.filter(project=pk, is_active=True)
     except ProjectUpdate.DoesNotExist:
         return Response({"status": "error", "message": "Project update not found."}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = ProjectUpdateSerializer(update)
+        serializer = ProjectUpdateSerializer(update, many=True)
         return Response({"status": "success", "data": serializer.data})
 
     elif request.method in ['PUT', 'PATCH']:

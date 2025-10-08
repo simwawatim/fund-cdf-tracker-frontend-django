@@ -219,7 +219,7 @@ Content-Type: application/json
 ###
 
 ### Retrieve a project update
-GET http://127.0.0.1:8000/api/project-updates/v1/1/
+GET http://127.0.0.1:8000/api/project-updates/v1/61/
 
 ###
 

@@ -163,7 +163,7 @@ Content-Type: application/json
 ###
 
 ### Retrieve a project details
-GET http://127.0.0.1:8000/api/projects/v1/1/
+GET http://127.0.0.1:8000/api/projects/v1/61/
 Accept: application/json
 
 ###
@@ -181,7 +181,7 @@ Content-Type: application/json
 ###
 
 ### Partial update a project (PATCH)
-PATCH http://127.0.0.1:8000/api/projects/v1/1/
+PATCH http://127.0.0.1:8000/api/projects/v1/8/
 Content-Type: application/json
 
 {
@@ -209,7 +209,7 @@ POST http://127.0.0.1:8000/api/project-updates/v1/
 Content-Type: application/json
 
 {
-  "project": 1,
+  "project": 61,
   "update_type": "progress",
   "progress_percentage": 20,
   "remarks": "Initial phase completed",

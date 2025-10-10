@@ -408,3 +408,6 @@ Content-Type: application/json
 ### Delete a comment (soft delete, comment_id = 5)
 DELETE http://127.0.0.1:8000/api/comments/5/
 Content-Type: application/json
+
+### Get dashboard stats
+GET http://127.0.0.1:8000/api/dashboard-summary/

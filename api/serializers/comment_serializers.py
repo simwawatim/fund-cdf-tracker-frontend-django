@@ -3,7 +3,7 @@ from base.models import ProjectComment
 
 class ProjectCommentSerializer(serializers.ModelSerializer):
     user_name = serializers.ReadOnlyField(source='user.username')
-    
+
     class Meta:
         model = ProjectComment
         fields = [

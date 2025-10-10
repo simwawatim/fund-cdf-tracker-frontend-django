@@ -47,32 +47,47 @@ def userprofile_detail(request, pk):
     try:
         profile = UserProfile.objects.get(pk=pk)
     except UserProfile.DoesNotExist:
-        return Response({"status": "error", "message": "UserProfile not found."},
-                        status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"status": "error", "message": "UserProfile not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
     if request.method == 'GET':
         serializer = UserProfileSerializer(profile)
-        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        return Response(
+            {"status": "success", "data": serializer.data},
+            status=status.HTTP_200_OK
+        )
 
     elif request.method in ['PUT', 'PATCH']:
-        serializer = UserProfileSerializer(profile, data=request.data, partial=(request.method=='PATCH'))
+        serializer = UserProfileSerializer(profile, data=request.data, partial=(request.method == 'PATCH'))
         if serializer.is_valid():
             try:
-                profile = serializer.save()
-                return Response({"status": "success", "data": UserProfileSerializer(profile).data},
-                                status=status.HTTP_200_OK)
+                updated_profile = serializer.save()
+                return Response(
+                    {"status": "success", "data": UserProfileSerializer(updated_profile).data},
+                    status=status.HTTP_200_OK
+                )
             except IntegrityError:
-                return Response({"status": "error", "message": "Username or email already exists."},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"status": "error", "message": "Username or email already exists."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             except Exception as e:
-                return Response({"status": "error", "message": str(e)},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"status": "error", "message": str(e)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         else:
-            return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"status": "error", "message": format_serializer_errors(serializer.errors)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     elif request.method == 'DELETE':
         profile.user.delete()
         profile.delete()
-        return Response({"status": "success", "message": "UserProfile deleted successfully."},
-                        status=status.HTTP_200_OK)
+        return Response(
+            {"status": "success", "message": "UserProfile deleted successfully."},
+            status=status.HTTP_200_OK
+        )

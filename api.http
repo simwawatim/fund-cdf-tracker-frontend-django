@@ -97,7 +97,7 @@ Content-Type: application/json
 ###
 
 ### Get user profile details
-GET http://127.0.0.1:8000/api/users/v1/2/
+GET http://127.0.0.1:8000/api/users/v1/9/
 Accept: application/json
 
 ###
@@ -121,7 +121,7 @@ Content-Type: application/json
 ###
 
 ### Partial update user profile (PATCH)
-PATCH http://127.0.0.1:8000/api/users/v1/2/
+PATCH http://127.0.0.1:8000/api/users/v1/61/
 Content-Type: application/json
 
 {
@@ -361,7 +361,7 @@ Accept: application/json
 
 
 ### Get all comments for a project (project_id = 1)
-GET http://127.0.0.1:8000/api/comments/?project=1
+GET http://127.0.0.1:8000/api/comments/?project=61
 Content-Type: application/json
 
 ###
@@ -372,13 +372,15 @@ Content-Type: application/json
 
 {
     "project": 61,
-    "message": "This is a test comment from REST client"
+    "user": 1,
+    "message": "This is a test comment"
 }
+
 
 ###
 
 ### Get a single comment by ID (comment_id = 5)
-GET http://127.0.0.1:8000/api/comments/5/
+GET http://127.0.0.1:8000/api/comments/1/
 Content-Type: application/json
 
 ###

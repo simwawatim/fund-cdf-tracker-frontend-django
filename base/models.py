@@ -116,8 +116,8 @@ class Project(models.Model):
     funding_source = models.CharField(max_length=50, choices=FUNDING_SOURCES, default='CDF')
     location = models.CharField(max_length=200, null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_projects')
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_projects')
+    created_by = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_projects')
+    updated_by = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_projects')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)  # Soft delete / archive

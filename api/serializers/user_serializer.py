@@ -56,7 +56,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return value
 
     def generate_password(self, length=8):
-        return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+        password = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+        print(password)
+        return password
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')

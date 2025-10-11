@@ -1,5 +1,6 @@
 from django.urls import path
 from api.views.comment_views import project_comment_detail, project_comments_list_create
+from api.views.graph_view import stats_overview
 from api.views.project_views import financial_report_detail, financial_report_list, project_detail, project_document_detail, project_document_list, project_list, project_update_detail, project_update_list
 from api.views.stats_view import dashboard_summary
 from api.views.user_views import userprofile_list, userprofile_detail
@@ -61,6 +62,7 @@ urlpatterns = [
     # Stats URLs
     # ---------------------------
     path('api/dashboard-summary/', dashboard_summary, name='dashboard-summary'),
+    path('api/stats/', stats_overview, name='stats_overview'),
 
     # JWT auth endpoints
     path('api/login/v1', login, name='custom-login'),

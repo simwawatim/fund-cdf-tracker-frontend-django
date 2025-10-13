@@ -1,14 +1,17 @@
-from rest_framework import serializers
-from base.models import Project, ProjectUpdate, FinancialReport, ProjectDocument, Constituency
+from base.models import Project, ProjectUpdate, FinancialReport, ProjectDocument, Constituency, UserProfile
+from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
+from base.models import ProjectDocument
+from rest_framework import serializers
+import requests, os
 
 # ---------------------------
 # Project Serializer
 # ---------------------------
 class ProjectSerializer(serializers.ModelSerializer):
     constituency = serializers.PrimaryKeyRelatedField(queryset=Constituency.objects.filter(is_active=True))
-    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
-    updated_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
+    created_by = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False, allow_null=True)
+    updated_by = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False, allow_null=True)
 
     class Meta:
         model = Project
@@ -65,15 +68,7 @@ class FinancialReportSerializer(serializers.ModelSerializer):
         return value
 
 
-# ---------------------------
-# ProjectDocument Serializer
-# ---------------------------
 
-# serializers.py
-from rest_framework import serializers
-from base.models import ProjectDocument
-from django.core.files.base import ContentFile
-import requests, os
 
 class ProjectDocumentSerializer(serializers.ModelSerializer):
     file_url = serializers.URLField(write_only=True, required=False)

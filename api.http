@@ -157,7 +157,8 @@ Content-Type: application/json
   "start_date": "2025-10-01",
   "end_date": "2026-03-01",
   "beneficiaries_count": 5000,
-  "remarks": "Urgent priority"
+  "remarks": "Urgent priority",
+  "created_by": 12
 }
 
 ###
@@ -192,7 +193,7 @@ Content-Type: application/json
 ###
 
 ### Delete a project (soft delete)
-DELETE http://127.0.0.1:8000/api/projects/v1/1/
+DELETE http://127.0.0.1:8000/api/projects/v1/61/
 
 ### ---------------------------
 ### Project Update / Progress

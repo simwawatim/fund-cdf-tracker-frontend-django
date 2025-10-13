@@ -14,14 +14,12 @@ def login(request):
     email = request.data.get('email')
     password = request.data.get('password')
 
-    # Validate input
     if not email or not password:
         return Response(
             {"status": "error", "message": "Email and password are required."},
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # Try to find user by email
     user = User.objects.filter(email=email).first()
     if not user:
         return Response(
@@ -29,7 +27,7 @@ def login(request):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-    # Authenticate with username and password
+
     user = authenticate(username=user.username, password=password)
     if not user:
         return Response(
@@ -37,10 +35,9 @@ def login(request):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-    # Create JWT token
     access_token = AccessToken.for_user(user)
 
-    # Add custom claims
+
     try:
         profile = user.profile
         access_token['role'] = profile.role

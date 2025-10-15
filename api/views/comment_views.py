@@ -2,11 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from api.serializers.comment_serializers import ProjectCommentSerializer
-from base.models import ProjectComment
+from base.models import ProjectComment, UserProfile
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([permissions.AllowAny])
+@permission_classes([permissions.AllowAny]) 
 def project_comments_list_create(request):
     if request.method == 'GET':
         project_id = request.query_params.get('project')
@@ -20,13 +20,30 @@ def project_comments_list_create(request):
         }, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
-        serializer = ProjectCommentSerializer(data=request.data)
+        data = request.data.copy()
+        user_id = data.get('user')
+        if not user_id:
+            return Response({
+                "status": "error",
+                "message": "UserProfile ID is required."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_profile = UserProfile.objects.get(id=user_id)
+        except UserProfile.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": "Invalid UserProfile ID."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = ProjectCommentSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()  # Allow user from request data
+            serializer.save(user=user_profile)
             return Response({
                 "status": "success",
                 "data": serializer.data
             }, status=status.HTTP_201_CREATED)
+
         return Response({
             "status": "error",
             "message": serializer.errors

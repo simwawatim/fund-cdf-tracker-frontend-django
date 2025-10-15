@@ -372,8 +372,8 @@ POST http://127.0.0.1:8000/api/comments/
 Content-Type: application/json
 
 {
-    "project": 61,
-    "user": 1,
+    "project": 60,
+    "user": 9,
     "message": "This is a test comment"
 }
 

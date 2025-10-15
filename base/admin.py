@@ -1,9 +1,10 @@
 
-from base.models import Program, Constituency, Project, ProjectComment, ProjectUpdate, ProjectDocument, UserProfile
+from base.models import Program, Constituency, Project, ProjectComment, ProjectUpdate, ProjectDocument, UserProfile, ProjectComment
 from django.contrib import admin
 
 
 admin.site.register(Program)
-admin.site.register(Constituency)
 admin.site.register(Project)
 admin.site.register(UserProfile)
+admin.site.register(Constituency)
+admin.site.register(ProjectComment)

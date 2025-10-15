@@ -205,7 +205,7 @@ class ProjectDocument(models.Model):
 # ---------------------------
 class ProjectComment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_comments')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='project_comments')
     message = models.TextField()
     parent = models.ForeignKey(
         'self',

@@ -1,14 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# ---------------------------
-# Choice Options
-# ---------------------------
 STATUS_CHOICES = (
     ('pending', 'Pending'),
-    ('ongoing', 'Ongoing'),
+    ('not_started', 'Not Started'),
+    ('planning', 'Planning'),
+    ('in_progress', 'In Progress'),
+    ('halfway', 'Halfway Done'),
+    ('almost_done', 'Almost Done'),
     ('completed', 'Completed'),
+    ('on_hold', 'On Hold'),
+    ('cancelled', 'Cancelled'),
 )
+
 
 FUNDING_SOURCES = (
     ('CDF', 'CDF'),
@@ -149,7 +153,7 @@ class Project(models.Model):
 # ---------------------------
 class ProjectUpdate(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='updates')
-    update_type = models.CharField(max_length=20, choices=UPDATE_TYPES, default='progress')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     date = models.DateTimeField(auto_now_add=True)
     progress_percentage = models.PositiveSmallIntegerField()
     remarks = models.TextField(null=True, blank=True)

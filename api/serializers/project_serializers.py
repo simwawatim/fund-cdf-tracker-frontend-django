@@ -42,7 +42,7 @@ class ProjectUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectUpdate
-        fields = ['id', 'project', 'update_type', 'date', 'progress_percentage', 'remarks', 'updated_by', 'is_active']
+        fields = ['id', 'project', 'status', 'date', 'progress_percentage', 'remarks', 'updated_by', 'is_active']
         read_only_fields = ['date']
 
     def validate_progress_percentage(self, value):

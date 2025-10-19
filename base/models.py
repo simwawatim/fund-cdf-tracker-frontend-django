@@ -165,6 +165,12 @@ class ProjectUpdate(models.Model):
 
     def __str__(self):
         return f"{self.project.name} Update - {self.progress_percentage}%"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.project.status = self.status
+        self.project.completion_percentage = self.progress_percentage
+        self.project.save()
 
 # ---------------------------
 # Financial Report / Spending

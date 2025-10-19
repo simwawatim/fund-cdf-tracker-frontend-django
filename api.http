@@ -291,7 +291,7 @@ POST http://127.0.0.1:8000/api/project-documents/v1/
 Content-Type: application/json
 
 {
-  "project": 1,
+  "project": 52,
   "title": "Project Blueprint Online",
   "doc_type": "report",
   "file_url": "https://maritime.org/doc/pdf/blueprint.pdf",
@@ -302,7 +302,7 @@ Content-Type: application/json
 ###
 
 ### Retrieve a document
-GET http://127.0.0.1:8000/api/project-documents/v1/1/
+GET http://127.0.0.1:8000/api/project-documents/v1/51/
 
 ###
 

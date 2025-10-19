@@ -1,3 +1,5 @@
+import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -193,11 +195,18 @@ class FinancialReport(models.Model):
 # ---------------------------
 # Project Attachments / Documents
 # ---------------------------
+
+
+def project_document_upload_to(instance, filename):
+    ext = filename.split('.')[-1] 
+    new_filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join('project_documents/', new_filename)
+
 class ProjectDocument(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='documents')
     title = models.CharField(max_length=200)
     doc_type = models.CharField(max_length=20, choices=DOC_TYPES, default='other')
-    file = models.FileField(upload_to='project_documents/')
+    file = models.FileField(upload_to=project_document_upload_to)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='project_documents')
     is_active = models.BooleanField(default=True)

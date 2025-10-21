@@ -75,7 +75,7 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectDocument
-        fields = ['id', 'project', 'title', 'doc_type', 'file', 'file_url', 'uploaded_by', 'uploaded_at']
+        fields = ['id', 'project', 'project_update', 'title', 'doc_type', 'file', 'file_url', 'uploaded_by', 'uploaded_at']
 
     def create(self, validated_data):
         file_url = validated_data.pop('file_url', None)

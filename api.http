@@ -210,7 +210,7 @@ POST http://127.0.0.1:8000/api/project-updates/v1/
 Content-Type: application/json
 
 {
-  "project": 61,
+  "project": 60,
   "update_type": "progress",
   "progress_percentage": 20,
   "remarks": "Initial phase completed",
@@ -291,7 +291,7 @@ POST http://127.0.0.1:8000/api/project-documents/v1/
 Content-Type: application/json
 
 {
-  "project": 52,
+  "project": 60,
   "title": "Project Blueprint Online",
   "doc_type": "report",
   "file_url": "https://maritime.org/doc/pdf/blueprint.pdf",

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -217,14 +218,10 @@ def project_document_list(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def project_documents_by_project(request, project_id):
-    try:
-        project = Project.objects.get(pk=project_id)
-    except Project.DoesNotExist:
-        return Response(
-            {"status": "error", "message": "Project not found."}, 
-            status=status.HTTP_404_NOT_FOUND
-        )
-
+    project = get_object_or_404(Project, pk=project_id)
     documents = ProjectDocument.objects.filter(project=project, is_active=True)
     serializer = ProjectDocumentSerializer(documents, many=True)
-    return Response({"status": "success", "data": serializer.data})
+    return Response({
+        "status": "success",
+        "data": serializer.data
+    })

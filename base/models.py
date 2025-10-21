@@ -204,6 +204,7 @@ def project_document_upload_to(instance, filename):
 
 class ProjectDocument(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='documents')
+    project_update = models.ForeignKey(ProjectUpdate, on_delete=models.SET_NULL, null=True, blank=True, related_name='documents')
     title = models.CharField(max_length=200)
     doc_type = models.CharField(max_length=20, choices=DOC_TYPES, default='other')
     file = models.FileField(upload_to=project_document_upload_to)

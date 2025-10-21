@@ -214,28 +214,17 @@ def project_document_list(request):
             return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
                             status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@api_view(['GET'])
 @permission_classes([AllowAny])
-def project_document_detail(request, pk):
+def project_documents_by_project(request, project_id):
     try:
-        doc = ProjectDocument.objects.get(pk=pk, is_active=True)
-    except ProjectDocument.DoesNotExist:
-        return Response({"status": "error", "message": "Project document not found."}, status=status.HTTP_404_NOT_FOUND)
+        project = Project.objects.get(pk=project_id)
+    except Project.DoesNotExist:
+        return Response(
+            {"status": "error", "message": "Project not found."}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
 
-    if request.method == 'GET':
-        serializer = ProjectDocumentSerializer(doc)
-        return Response({"status": "success", "data": serializer.data})
-
-    elif request.method in ['PUT', 'PATCH']:
-        serializer = ProjectDocumentSerializer(doc, data=request.data, partial=(request.method=='PATCH'))
-        if serializer.is_valid():
-            doc = serializer.save()
-            return Response({"status": "success", "data": ProjectDocumentSerializer(doc).data})
-        else:
-            return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        doc.is_active = False
-        doc.save()
-        return Response({"status": "success", "message": "Project document soft-deleted."})
+    documents = ProjectDocument.objects.filter(project=project, is_active=True)
+    serializer = ProjectDocumentSerializer(documents, many=True)
+    return Response({"status": "success", "data": serializer.data})

@@ -3,6 +3,12 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
+
+def project_document_upload_to(instance, filename):
+    ext = filename.split('.')[-1] 
+    new_filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join('project_documents/', new_filename)
+
 STATUS_CHOICES = (
     ('pending', 'Pending'),
     ('not_started', 'Not Started'),
@@ -159,6 +165,7 @@ class ProjectUpdate(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     progress_percentage = models.PositiveSmallIntegerField()
     remarks = models.TextField(null=True, blank=True)
+    file = models.FileField(upload_to=project_document_upload_to, null=True, blank=True)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='project_updates')
     is_active = models.BooleanField(default=True)  # For soft delete / archiving
 
@@ -197,10 +204,7 @@ class FinancialReport(models.Model):
 # ---------------------------
 
 
-def project_document_upload_to(instance, filename):
-    ext = filename.split('.')[-1] 
-    new_filename = f"{uuid.uuid4()}.{ext}"
-    return os.path.join('project_documents/', new_filename)
+
 
 class ProjectDocument(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='documents')

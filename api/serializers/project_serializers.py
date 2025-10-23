@@ -1,9 +1,11 @@
-from base.models import Project, ProjectUpdate, FinancialReport, ProjectDocument, Constituency, UserProfile
+import os
+import requests
 from django.core.files.base import ContentFile
-from django.contrib.auth.models import User
-from base.models import ProjectDocument
 from rest_framework import serializers
-import requests, os
+from django.contrib.auth.models import User
+from base.models import (
+    Project, ProjectUpdate, FinancialReport, ProjectDocument, Constituency, UserProfile
+)
 
 # ---------------------------
 # Project Serializer
@@ -25,10 +27,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at', 'updated_at', 'actual_expenditure', 'completion_percentage']
 
     def validate_name(self, value):
-        if self.instance:
-            qs = Project.objects.exclude(pk=self.instance.pk)
-        else:
-            qs = Project.objects.all()
+        qs = Project.objects.exclude(pk=self.instance.pk) if self.instance else Project.objects.all()
         if qs.filter(name=value).exists():
             raise serializers.ValidationError("Project name must be unique.")
         return value
@@ -42,7 +41,7 @@ class ProjectUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectUpdate
-        fields = ['id', 'project', 'status', 'date', 'progress_percentage', 'remarks', 'updated_by', 'is_active']
+        fields = ['id', 'project', 'status', 'date', 'progress_percentage', 'file', 'remarks', 'updated_by', 'is_active']
         read_only_fields = ['date']
 
     def validate_progress_percentage(self, value):
@@ -68,8 +67,9 @@ class FinancialReportSerializer(serializers.ModelSerializer):
         return value
 
 
-
-
+# ---------------------------
+# ProjectDocument Serializer
+# ---------------------------
 class ProjectDocumentSerializer(serializers.ModelSerializer):
     file_url = serializers.URLField(write_only=True, required=False)
 
@@ -86,6 +86,4 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
                 validated_data['file'] = ContentFile(resp.content, name=filename)
             else:
                 raise serializers.ValidationError({"file_url": "Could not download the file."})
-
         return super().create(validated_data)
-

@@ -105,7 +105,6 @@ def project_update_list(request):
         serializer = ProjectUpdateSerializer(data=request.data)
         if serializer.is_valid():
             update = serializer.save()
-            # auto-update project completion
             update.project.update_completion()
             return Response({"status": "success", "data": ProjectUpdateSerializer(update).data},
                             status=status.HTTP_201_CREATED)
@@ -117,13 +116,7 @@ def project_update_list(request):
 @permission_classes([AllowAny])
 def project_update_detail(request, pk):
     try:
-        update = ProjectUpdate.objects.filter(project__id=pk)
-
-        print(f"Fetched update for project ID {pk}: {update}")
-        all_updates = ProjectUpdate.objects.all()
-        for u in all_updates:
-            print(f"Update {u.id} belongs to project '{u.project.name}' (ID: {u.project.id})")
-        print("All Updates:", all_updates)
+        update = ProjectUpdate.objects.filter(project=pk, is_active=True)
     except ProjectUpdate.DoesNotExist:
         return Response({"status": "error", "message": "Project update not found."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -148,100 +141,73 @@ def project_update_detail(request, pk):
         return Response({"status": "success", "message": "Project update soft-deleted."})
 
 
-# ---------------------------
-# Financial Report CRUD
-# ---------------------------
-@api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def financial_report_list(request):
-    if request.method == 'GET':
-        reports = FinancialReport.objects.filter(is_active=True)
-        serializer = FinancialReportSerializer(reports, many=True)
-        return Response({"status": "success", "data": serializer.data})
 
-    elif request.method == 'POST':
-        serializer = FinancialReportSerializer(data=request.data)
-        if serializer.is_valid():
-            report = serializer.save()
-            report.project.update_expenditure()
-            return Response({"status": "success", "data": FinancialReportSerializer(report).data},
-                            status=status.HTTP_201_CREATED)
-        else:
-            return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
-                            status=status.HTTP_400_BAD_REQUEST)
+from django.urls import path
+from api.views.comment_views import project_comment_detail, project_comments_list_create
+from api.views.graph_view import stats_overview
+from api.views.project_views import financial_report_detail, financial_report_list, project_detail, project_document_detail, project_document_list, project_list, project_update_detail, project_update_list
+from api.views.stats_view import dashboard_summary
+from api.views.user_views import userprofile_list, userprofile_detail
+from api.views.constituency_views import constituency_list, constituency_detail
+from api.views.program_view import program_detail, program_list
 
-@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
-def financial_report_detail(request, pk):
-    try:
-        report = FinancialReport.objects.get(pk=pk, is_active=True)
-    except FinancialReport.DoesNotExist:
-        return Response({"status": "error", "message": "Financial report not found."}, status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = FinancialReportSerializer(report)
-        return Response({"status": "success", "data": serializer.data})
-
-    elif request.method in ['PUT', 'PATCH']:
-        serializer = FinancialReportSerializer(report, data=request.data, partial=(request.method=='PATCH'))
-        if serializer.is_valid():
-            report = serializer.save()
-            report.project.update_expenditure()
-            return Response({"status": "success", "data": FinancialReportSerializer(report).data})
-        else:
-            return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        report.is_active = False
-        report.save()
-        report.project.update_expenditure()
-        return Response({"status": "success", "message": "Financial report soft-deleted."})
+from api.views.auth_views import (
+    login,
+)
 
 
-# ---------------------------
-# Project Document CRUD
-# ---------------------------
-@api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
-def project_document_list(request):
-    if request.method == 'GET':
-        docs = ProjectDocument.objects.filter(is_active=True)
-        serializer = ProjectDocumentSerializer(docs, many=True)
-        return Response({"status": "success", "data": serializer.data})
+urlpatterns = [
+    path('api/users/v1/', userprofile_list, name='userprofile-list'),
+    path('api/users/v1/<int:pk>/', userprofile_detail, name='userprofile-detail'),
+    path('api/constituencies/v1/', constituency_list, name='constituency-list'),
+    path('api/constituencies/v1/<int:pk>/', constituency_detail, name='constituency-detail'),
+    path('api/projects/v1/', project_list, name='project-list'),
+    path('api/projects/v1/<int:pk>/', project_detail, name='project-detail'),
 
-    elif request.method == 'POST':
-        serializer = ProjectDocumentSerializer(data=request.data)
-        if serializer.is_valid():
-            doc = serializer.save()
-            return Response({"status": "success", "data": ProjectDocumentSerializer(doc).data},
-                            status=status.HTTP_201_CREATED)
-        else:
-            return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
-                            status=status.HTTP_400_BAD_REQUEST)
+    # ---------------------------
+    # Project URLs
+    # ---------------------------
+    path('api/projects/v1/', project_list, name='project-list'),
+    path('api/projects/v1/<int:pk>/', project_detail, name='project-detail'),
 
-@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
-def project_document_detail(request, pk):
-    try:
-        doc = ProjectDocument.objects.get(pk=pk, is_active=True)
-    except ProjectDocument.DoesNotExist:
-        return Response({"status": "error", "message": "Project document not found."}, status=status.HTTP_404_NOT_FOUND)
+    # ---------------------------
+    # Project Update URLs
+    # ---------------------------
+    path('api/project-updates/v1/', project_update_list, name='project-update-list'),
+    path('api/project-updates/v1/<int:pk>/', project_update_detail, name='project-update-detail'),
 
-    if request.method == 'GET':
-        serializer = ProjectDocumentSerializer(doc)
-        return Response({"status": "success", "data": serializer.data})
+    # ---------------------------
+    # Financial Report URLs
+    # ---------------------------
+    path('api/financial-reports/v1/', financial_report_list, name='financial-report-list'),
+    path('api/financial-reports/v1/<int:pk>/', financial_report_detail, name='financial-report-detail'),
 
-    elif request.method in ['PUT', 'PATCH']:
-        serializer = ProjectDocumentSerializer(doc, data=request.data, partial=(request.method=='PATCH'))
-        if serializer.is_valid():
-            doc = serializer.save()
-            return Response({"status": "success", "data": ProjectDocumentSerializer(doc).data})
-        else:
-            return Response({"status": "error", "message": format_serializer_errors(serializer.errors)},
-                            status=status.HTTP_400_BAD_REQUEST)
+    # ---------------------------
+    # Project Document URLs
+    # ---------------------------
+    path('api/project-documents/v1/', project_document_list, name='project-document-list'),
+    path('api/project-documents/v1/<int:pk>/', project_document_detail, name='project-document-detail'),
 
-    elif request.method == 'DELETE':
-        doc.is_active = False
-        doc.save()
-        return Response({"status": "success", "message": "Project document soft-deleted."})
+    # ---------------------------
+    # Program URLs
+    # ---------------------------
+
+    path('api/programs/v1', program_list),
+    path('api/programs/v1/<int:pk>', program_detail),
+
+    # ---------------------------
+    # Comment URLs
+    # ---------------------------
+
+    path('api/comments/', project_comments_list_create, name='comments-list-create'),
+    path('api/comments/<int:pk>/', project_comment_detail, name='comment-detail'),
+
+    # ---------------------------
+    # Stats URLs
+    # ---------------------------
+    path('api/dashboard-summary/', dashboard_summary, name='dashboard-summary'),
+    path('api/stats/', stats_overview, name='stats_overview'),
+
+    # JWT auth endpoints
+    path('api/login/v1', login, name='custom-login'),
+]

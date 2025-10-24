@@ -128,6 +128,22 @@ Content-Type: application/json
   "phone": "0987123456"
 }
 
+
+###
+PATCH  http://127.0.0.1:8000/api/users/update-profile/v1/14/
+Content-Type: application/json
+
+{
+  "role": "admin",
+  "phone": "+260970123456",
+  "user": {
+    "first_name": "Timothy",
+    "last_name": "Doe",
+    "email": "1@example.com"
+  }
+}
+
+
 ###
 
 ### Delete user profile

@@ -1,11 +1,15 @@
-from rest_framework import status
+import json
+from api.serializers.user_serializer import UserProfileSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from base.models import UserProfile
-from api.serializers.user_serializer import UserProfileSerializer
+from django.contrib.auth.models import User
 from django.db import IntegrityError
-from rest_framework.permissions import AllowAny
-from rest_framework.decorators import api_view, permission_classes
+from base.models import UserProfile
+from rest_framework import status
+
+
 
 def format_serializer_errors(errors):
     formatted = {}
@@ -91,3 +95,23 @@ def userprofile_detail(request, pk):
             {"status": "success", "message": "UserProfile deleted successfully."},
             status=status.HTTP_200_OK
         )
+
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def update_user_profile(request, id):
+    try:
+        profile = UserProfile.objects.get(user__id=id)
+    except UserProfile.DoesNotExist:
+        return Response(
+            {"status": "error", "message": "User profile not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {"status": "success", "message": "User profile updated successfully.", "data": serializer.data},
+            status=status.HTTP_200_OK
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

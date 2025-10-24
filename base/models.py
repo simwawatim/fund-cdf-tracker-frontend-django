@@ -246,4 +246,4 @@ class ProjectComment(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Comment by {self.user.username} on {self.project.name}"
+        return f"Comment by {self.user} on {self.project.name}"

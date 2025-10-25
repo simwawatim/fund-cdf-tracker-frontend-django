@@ -1,7 +1,7 @@
 import json
 from api.serializers.user_serializer import UserProfileSerializer
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAuthenticated
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -21,7 +21,7 @@ def format_serializer_errors(errors):
     return formatted
 
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def userprofile_list(request):
     if request.method == 'GET':
         profiles = UserProfile.objects.all()
@@ -46,7 +46,7 @@ def userprofile_list(request):
                             status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def userprofile_detail(request, pk):
     try:
         profile = UserProfile.objects.get(pk=pk)
@@ -97,7 +97,7 @@ def userprofile_detail(request, pk):
         )
 
 @api_view(['PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_user_profile(request, id):
     try:
         profile = UserProfile.objects.get(user__id=id)

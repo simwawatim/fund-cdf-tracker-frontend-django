@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from base.models import ProjectUpdate, FinancialReport, ProjectDocument
 from api.serializers.project_serializers import FinancialReportSerializer, ProjectDocumentSerializer, ProjectUpdateSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
 def format_serializer_errors(errors):
@@ -30,7 +30,7 @@ def format_serializer_errors(errors):
 # Project Views
 # ---------------------------
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def project_list(request):
     if request.method == 'GET':
         projects = Project.objects.filter(is_active=True)
@@ -52,7 +52,7 @@ def project_list(request):
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def project_detail(request, pk):
     try:
         project = Project.objects.get(pk=pk, is_active=True)
@@ -94,7 +94,7 @@ def format_serializer_errors(errors):
 # Project Update CRUD
 # ---------------------------
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def project_update_list(request):
     if request.method == 'GET':
         updates = ProjectUpdate.objects.filter(is_active=True)
@@ -114,7 +114,7 @@ def project_update_list(request):
                             status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def project_update_detail(request, pk):
     try:
         update = ProjectUpdate.objects.filter(project__id=pk)

@@ -1,3 +1,5 @@
+from rest_framework.decorators import permission_classes, api_view
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http import JsonResponse
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
@@ -5,6 +7,8 @@ from django.contrib.auth.models import User
 from base.models import Project
 import calendar
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def stats_overview(request):
     user_stats = (
         User.objects.annotate(month=TruncMonth('date_joined'))

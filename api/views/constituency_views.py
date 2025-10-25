@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from base.models import Constituency
 from api.serializers.constituency_serializer import ConstituencySerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
 def format_serializer_errors(errors):
@@ -29,6 +29,12 @@ def constituency_list(request):
         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
+        if not request.user.is_authenticated:
+            return Response(
+                {"status": "error", "message": "Authentication required."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
         serializer = ConstituencySerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -43,7 +49,7 @@ def constituency_list(request):
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def constituency_detail(request, pk):
     try:
         item = Constituency.objects.get(pk=pk)

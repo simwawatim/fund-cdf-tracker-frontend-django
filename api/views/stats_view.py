@@ -1,15 +1,14 @@
 from rest_framework.decorators import api_view, permission_classes
 from base.models import Program, Project, Constituency
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def dashboard_summary(request):
-    """Returns summary statistics for dashboard."""
     total_users = User.objects.count()
     total_constituencies = Constituency.objects.count()
     total_programs = Program.objects.count()

@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from base.models import Program
 from api.serializers.program_serializer import ProgramSerializer
@@ -22,7 +22,7 @@ def format_serializer_errors(errors):
 # GET (List) + POST (Create)
 # --------------------------
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def program_list(request):
     if request.method == "GET":
         programs = Program.objects.all()
@@ -59,7 +59,7 @@ def program_list(request):
 # GET (Retrieve) + PUT (Update) + DELETE
 # --------------------------
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def program_detail(request, pk):
     try:
         program = Program.objects.get(pk=pk)

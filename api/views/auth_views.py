@@ -41,6 +41,7 @@ def login(request):
     try:
         profile = user.profile
         access_token['role'] = profile.role
+        access_token['profile_id'] = profile.id
         access_token['constituency'] = profile.constituency.id if profile.constituency else None
     except ObjectDoesNotExist:
         access_token['role'] = None

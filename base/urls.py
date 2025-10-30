@@ -3,7 +3,7 @@ from api.views.comment_views import project_comment_detail, project_comments_lis
 from api.views.graph_view import stats_overview
 from api.views.project_views import financial_report_detail, financial_report_list, project_detail, project_document_detail, project_document_list, project_list, project_update_detail, project_update_list
 from api.views.stats_view import dashboard_summary
-from api.views.user_views import userprofile_list, userprofile_detail,  update_user_profile
+from api.views.user_views import get_profile_picture, userprofile_list, userprofile_detail,  update_user_profile
 from api.views.constituency_views import constituency_list, constituency_detail
 from api.views.program_view import program_detail, program_list
 
@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/projects/v1/<int:pk>/', project_detail, name='project-detail'),
 
     path('api/users/update-profile/v1/<int:id>/',  update_user_profile),
+    path('api/user-profiles/picture/<int:user_id>/', get_profile_picture, name='get-profile-picture'),
 
     # ---------------------------
     # Project URLs

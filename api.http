@@ -429,3 +429,6 @@ Content-Type: application/json
 
 ### Get dashboard stats
 GET http://127.0.0.1:8000/api/dashboard-summary/
+
+### Get profile picture for user with ID 1
+GET http://127.0.0.1:8000/api/user-profiles/picture/19/

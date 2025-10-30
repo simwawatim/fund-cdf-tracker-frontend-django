@@ -2,6 +2,7 @@ import os
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 def project_document_upload_to(instance, filename):
@@ -94,11 +95,34 @@ class Constituency(models.Model):
 # ---------------------------
 # User Profile / Roles
 # ---------------------------
+
+
 class UserProfile(models.Model):
+    USER_ROLES = [
+        ('viewer', 'Viewer'),
+        ('editor', 'Editor'),
+        ('admin', 'Admin'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     role = models.CharField(max_length=20, choices=USER_ROLES, default='viewer')
     phone = models.CharField(max_length=20, null=True, blank=True)
-    constituency = models.ForeignKey(Constituency, on_delete=models.SET_NULL, null=True, blank=True)
+    constituency = models.ForeignKey('Constituency', on_delete=models.SET_NULL, null=True, blank=True)
+
+    # Add profile and cover images
+    profile_picture = models.ImageField(
+        upload_to='profiles/', 
+        null=True, 
+        blank=True, 
+        default='profiles/default_profile.jpg'
+    )
+    cover_picture = models.ImageField(
+        upload_to='covers/', 
+        null=True, 
+        blank=True, 
+        default='covers/default_cover.jpg'
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -108,6 +132,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+
 
 # ---------------------------
 # Project Model

@@ -2,6 +2,9 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from base.models import UserProfile, Constituency
 from django.conf import settings
+import random
+import string
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.exclude(pk=instance.pk).filter(email=email).exists():
             raise serializers.ValidationError({"email": "A user with that email already exists."})
 
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
@@ -34,8 +38,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
-    profile_picture = serializers.SerializerMethodField()
-    cover_picture = serializers.SerializerMethodField()
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    cover_picture = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = UserProfile
@@ -46,15 +50,30 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['created_at', 'updated_at']
 
-    def get_profile_picture(self, obj):
-        if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
-            return obj.profile_picture.url
-        return settings.MEDIA_URL + 'profiles/default_profile.jpg'
+    # ✅ Add default URLs for missing images
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
 
-    def get_cover_picture(self, obj):
-        if obj.cover_picture and hasattr(obj.cover_picture, 'url'):
-            return obj.cover_picture.url
-        return settings.MEDIA_URL + 'covers/default_cover.jpg'
+        # Profile picture
+        if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
+            data['profile_picture'] = (
+                request.build_absolute_uri(instance.profile_picture.url)
+                if request else instance.profile_picture.url
+            )
+        else:
+            data['profile_picture'] = settings.MEDIA_URL + 'profiles/default_profile.jpg'
+
+        # Cover picture
+        if instance.cover_picture and hasattr(instance.cover_picture, 'url'):
+            data['cover_picture'] = (
+                request.build_absolute_uri(instance.cover_picture.url)
+                if request else instance.cover_picture.url
+            )
+        else:
+            data['cover_picture'] = settings.MEDIA_URL + 'covers/default_cover.jpg'
+
+        return data
 
     def validate_role(self, value):
         if value not in ['admin', 'officer', 'viewer']:
@@ -64,13 +83,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
 
-        # Check unique username/email
+        # Ensure unique username/email
         if User.objects.filter(username=user_data['username']).exists():
             raise serializers.ValidationError({"user": {"username": "Username already exists."}})
         if User.objects.filter(email=user_data['email']).exists():
             raise serializers.ValidationError({"user": {"email": "Email already exists."}})
 
-        # Create user
+        # Create user with random password
         password = self.generate_password()
         user = User.objects.create(**user_data)
         user.set_password(password)
@@ -79,23 +98,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
         # Create profile
         profile = UserProfile.objects.create(user=user, **validated_data)
 
-        # Send email logic here...
-
+        # Optional: send email logic
         return profile
 
     def update(self, instance, validated_data):
+        # Handle nested user update
         user_data = validated_data.pop('user', None)
         if user_data:
             user_serializer = UserSerializer(instance.user, data=user_data, partial=True)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
 
+        # Update profile fields (including images)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
         instance.save()
         return instance
 
     def generate_password(self, length=8):
-        import random, string
-        password = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
-        return password
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=length))

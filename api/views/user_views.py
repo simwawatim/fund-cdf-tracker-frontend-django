@@ -1,6 +1,7 @@
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from api.serializers.user_serializer import UserProfileSerializer
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -99,6 +100,7 @@ def userprofile_detail(request, pk):
 
 @api_view(['PATCH'])
 @permission_classes([AllowAny])
+@parser_classes([MultiPartParser, FormParser])
 def update_user_profile(request, id):
     try:
         profile = UserProfile.objects.get(user__id=id)
@@ -109,15 +111,15 @@ def update_user_profile(request, id):
         )
 
     serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+
     if serializer.is_valid():
         serializer.save()
         return Response(
             {"status": "success", "message": "User profile updated successfully.", "data": serializer.data},
             status=status.HTTP_200_OK
         )
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 @api_view(['GET'])

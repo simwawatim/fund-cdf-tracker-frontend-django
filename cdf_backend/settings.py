@@ -136,7 +136,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CURRENT_DOMAIN = "http://127.0.0.1:8000/"
+CURRENT_DOMAIN = "https://fund-cdf-tracker-frontend-django.onrender.com/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

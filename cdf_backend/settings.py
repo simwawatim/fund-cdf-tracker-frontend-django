@@ -163,5 +163,12 @@ REST_FRAMEWORK = {
     ),
 }
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://fund-cdf-tracker-frontend-django.onrender.com",
+    "http://localhost:3000",
+]
+
+
 CORS_ALLOW_ALL_ORIGINS = True
 X_FRAME_OPTIONS = 'SAMEORIGIN' 

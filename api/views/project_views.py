@@ -105,7 +105,6 @@ def project_update_list(request):
         serializer = ProjectUpdateSerializer(data=request.data)
         if serializer.is_valid():
             update = serializer.save()
-            # auto-update project completion
             update.project.update_completion()
             return Response({"status": "success", "data": ProjectUpdateSerializer(update).data},
                             status=status.HTTP_201_CREATED)

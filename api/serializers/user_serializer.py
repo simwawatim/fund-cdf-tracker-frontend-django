@@ -1,3 +1,4 @@
+from utils.send_mail import send_welcome_email
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from base.models import UserProfile, Constituency
@@ -50,12 +51,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['created_at', 'updated_at']
 
-    # ✅ Add default URLs for missing images
     def to_representation(self, instance):
         data = super().to_representation(instance)
         request = self.context.get('request')
-
-        # Profile picture
         if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
             data['profile_picture'] = (
                 request.build_absolute_uri(instance.profile_picture.url)
@@ -63,8 +61,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             )
         else:
             data['profile_picture'] = settings.MEDIA_URL + 'profiles/default_profile.jpg'
-
-        # Cover picture
         if instance.cover_picture and hasattr(instance.cover_picture, 'url'):
             data['cover_picture'] = (
                 request.build_absolute_uri(instance.cover_picture.url)
@@ -82,34 +78,39 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
-
-        # Ensure unique username/email
         if User.objects.filter(username=user_data['username']).exists():
             raise serializers.ValidationError({"user": {"username": "Username already exists."}})
+
         if User.objects.filter(email=user_data['email']).exists():
             raise serializers.ValidationError({"user": {"email": "Email already exists."}})
 
-        # Create user with random password
         password = self.generate_password()
+        email_sent = send_welcome_email(
+            recipient=user_data['email'],
+            username=user_data['username'],
+            password=password
+        )
+
+        if not email_sent:
+            raise serializers.ValidationError({"email": "Failed to send login details. User not created."})
+
+
         user = User.objects.create(**user_data)
         user.set_password(password)
         user.save()
 
-        # Create profile
         profile = UserProfile.objects.create(user=user, **validated_data)
 
-        # Optional: send email logic
         return profile
 
+
     def update(self, instance, validated_data):
-        # Handle nested user update
         user_data = validated_data.pop('user', None)
         if user_data:
             user_serializer = UserSerializer(instance.user, data=user_data, partial=True)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
 
-        # Update profile fields (including images)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 

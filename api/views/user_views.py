@@ -23,7 +23,7 @@ def format_serializer_errors(errors):
     return formatted
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def userprofile_list(request):
     if request.method == 'GET':
         profiles = UserProfile.objects.all()

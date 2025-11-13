@@ -36,8 +36,6 @@ def login(request):
         )
 
     access_token = AccessToken.for_user(user)
-
-
     try:
         profile = user.profile
         access_token['role'] = profile.role

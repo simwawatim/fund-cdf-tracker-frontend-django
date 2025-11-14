@@ -1,4 +1,5 @@
 from django.urls import path
+from api.views.change_password import change_password
 from api.views.comment_views import project_comment_detail, project_comments_list_create
 from api.views.graph_view import stats_overview
 from api.views.project_views import financial_report_detail, financial_report_list, project_detail, project_document_detail, project_document_list, project_list, project_update_detail, project_update_list
@@ -19,7 +20,7 @@ urlpatterns = [
     path('api/constituencies/v1/<int:pk>/', constituency_detail, name='constituency-detail'),
     path('api/projects/v1/', project_list, name='project-list'),
     path('api/projects/v1/<int:pk>/', project_detail, name='project-detail'),
-
+    path('api/change-password/v1', change_password, name='change-password'),
     path('api/users/update-profile/v1/<int:id>/',  update_user_profile),
     path('api/user-profiles/picture/<int:user_id>/', get_profile_picture, name='get-profile-picture'),
 

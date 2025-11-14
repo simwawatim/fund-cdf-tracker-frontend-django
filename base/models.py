@@ -125,7 +125,8 @@ class UserProfile(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    isDefaultPasswordChanged = models.BooleanField(default=0, blank=True, null=True)
+    
     class Meta:
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"

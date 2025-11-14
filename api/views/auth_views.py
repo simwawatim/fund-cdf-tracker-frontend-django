@@ -5,6 +5,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
 from django.core.exceptions import ObjectDoesNotExist
+from base.models import UserProfile
 
 User = get_user_model()
 
@@ -34,12 +35,16 @@ def login(request):
             {"status": "error", "message": "Invalid credentials."},
             status=status.HTTP_401_UNAUTHORIZED
         )
+    
+    userProfile = UserProfile.objects.get(user = user)
+    isPasswordUpdateOnFirstLogin = userProfile.isDefaultPasswordChanged
 
     access_token = AccessToken.for_user(user)
     try:
         profile = user.profile
         access_token['role'] = profile.role
         access_token['profile_id'] = profile.id
+        access_token['isPasswordUpdateOnFirstLogin'] = isPasswordUpdateOnFirstLogin 
         access_token['constituency'] = profile.constituency.id if profile.constituency else None
     except ObjectDoesNotExist:
         access_token['role'] = None

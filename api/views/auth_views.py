@@ -28,28 +28,24 @@ def login(request):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
+
     user = authenticate(username=user.username, password=password)
     if not user:
         return Response(
             {"status": "error", "message": "Invalid credentials."},
             status=status.HTTP_401_UNAUTHORIZED
         )
-
-    userProfile = UserProfile.objects.get(user=user)
+    
+    userProfile = UserProfile.objects.get(user = user)
     isPasswordUpdateOnFirstLogin = userProfile.isDefaultPasswordChanged
 
     access_token = AccessToken.for_user(user)
-    if "exp" in access_token.payload:
-        del access_token.payload["exp"]
-
     try:
         profile = user.profile
         access_token['role'] = profile.role
         access_token['profile_id'] = profile.id
-        access_token['isPasswordUpdateOnFirstLogin'] = isPasswordUpdateOnFirstLogin
-        access_token['constituency'] = (
-            profile.constituency.id if profile.constituency else None
-        )
+        access_token['isPasswordUpdateOnFirstLogin'] = isPasswordUpdateOnFirstLogin 
+        access_token['constituency'] = profile.constituency.id if profile.constituency else None
     except ObjectDoesNotExist:
         access_token['role'] = None
         access_token['constituency'] = None

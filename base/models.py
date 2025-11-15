@@ -12,15 +12,14 @@ def project_document_upload_to(instance, filename):
 
 STATUS_CHOICES = (
     ('pending', 'Pending'),
-    ('not_started', 'Not Started'),
-    ('planning', 'Planning'),
     ('in_progress', 'In Progress'),
-    ('halfway', 'Halfway Done'),
-    ('almost_done', 'Almost Done'),
-    ('completed', 'Completed'),
     ('on_hold', 'On Hold'),
+    ('completed', 'Completed'),
     ('cancelled', 'Cancelled'),
+    ('rejected', 'Rejected'),
 )
+
+
 
 
 FUNDING_SOURCES = (
@@ -102,6 +101,7 @@ class UserProfile(models.Model):
         ('viewer', 'Viewer'),
         ('editor', 'Editor'),
         ('admin', 'Admin'),
+        ('officer', 'Officer'), 
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

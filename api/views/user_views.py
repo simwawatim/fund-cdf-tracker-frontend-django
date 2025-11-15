@@ -136,3 +136,19 @@ def get_profile_picture(request, user_id):
     except UserProfile.DoesNotExist:
         return Response({"status": "error", "message": "User profile not found."},
                         status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_profile_picture_by_profile_id(request, id):
+    try:
+        profile = UserProfile.objects.get(id=id)
+        CURRENT_DOMAIN = settings.CURRENT_DOMAIN  
+        pic_url = f"{CURRENT_DOMAIN}media/{profile.profile_picture}"
+
+
+        
+        return Response({"status": "success", "profile_pic": pic_url}, status=status.HTTP_200_OK)
+    except UserProfile.DoesNotExist:
+        return Response({"status": "error", "message": "User profile not found."},
+                        status=status.HTTP_404_NOT_FOUND)

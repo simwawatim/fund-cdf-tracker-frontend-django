@@ -12,7 +12,7 @@ from api.serializers.contractor_serializers import ContractorSerializer
 def contractor_list_create(request):
 
     if request.method == "GET":
-        contractors = Contractor.objects.filter(is_active=True).order_by("name")
+        contractors = Contractor.objects.filter().order_by("name")
         serializer = ContractorSerializer(contractors, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == "POST":
@@ -65,8 +65,7 @@ def contractor_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     if request.method == "DELETE":
-        contractor.is_active = False
-        contractor.save()
+        contractor.delete()
         return Response(
             {"message": "Contractor deleted successfully."},
             status=status.HTTP_204_NO_CONTENT

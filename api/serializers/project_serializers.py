@@ -4,7 +4,7 @@ from django.core.files.base import ContentFile
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from base.models import (
-    Project, ProjectUpdate, FinancialReport, ProjectDocument, Constituency, UserProfile
+    Contractor, Project, ProjectUpdate, FinancialReport, ProjectDocument, Constituency, UserProfile
 )
 
 # ---------------------------
@@ -13,7 +13,7 @@ from base.models import (
 class ProjectSerializer(serializers.ModelSerializer):
     constituency = serializers.PrimaryKeyRelatedField(queryset=Constituency.objects.filter(is_active=True))
     created_by = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False, allow_null=True)
-    updated_by = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False, allow_null=True)
+    contractor = serializers.PrimaryKeyRelatedField(queryset=Contractor.objects.filter(is_active=True), required=False, allow_null=True)  # <-- Add this
 
     class Meta:
         model = Project
@@ -22,7 +22,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'allocated_budget', 'actual_expenditure', 'status',
             'start_date', 'end_date', 'completion_percentage', 'beneficiaries_count',
             'project_manager', 'funding_source', 'location', 'remarks',
-            'created_by', 'updated_by', 'created_at', 'updated_at', 'is_active'
+            'created_by', 'updated_by', 'contractor', 'created_at', 'updated_at', 'is_active'
         ]
         read_only_fields = ['created_at', 'updated_at', 'actual_expenditure', 'completion_percentage']
 

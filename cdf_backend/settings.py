@@ -146,11 +146,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CURRENT_DOMAIN = "http://localhost:8000/"
-FRONTEND_URL = "http://localhost:3000"
+CURRENT_DOMAIN = "https://fund-cdf-tracker-frontend-django.onrender.com/"
+FRONTEND_URL = "https://fund-cdf-tracker-frontend-nextjs.vercel.app/"
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
-        "frame-ancestors": ("'self'", "http://localhost:3000"),
+        "frame-ancestors": ("'self'", "https://fund-cdf-tracker-frontend-nextjs.vercel.app"),
     }
 }
 

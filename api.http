@@ -432,3 +432,38 @@ GET http://127.0.0.1:8000/api/dashboard-summary/
 
 ### Get profile picture for user with ID 1
 GET http://127.0.0.1:8000/api/user-profiles/picture/19/
+
+
+###
+GET http://127.0.0.1:8000/api/contractors/v1
+Accept: application/json
+
+###
+POST http://127.0.0.1:8000/api/contractors/v1
+Content-Type: application/json
+
+{
+  "name": "Jumbo Construction Ltd1",
+  "contact_person": "Peter Mwale",
+  "phone": "0977001122",
+  "email": "peter@jumbo.com",
+  "address": "Plot 120, Lusaka",
+  "is_active": true
+}
+
+###
+GET http://127.0.0.1:8000/api/contractors/v1/1/
+Accept: application/json
+
+
+###
+PUT http://127.0.0.1:8000/api/contractors/v1/5/
+Content-Type: application/json
+{
+  "name": "Jumbo Construction Ltd",
+  "contact_person": "Andrew Phiri",
+  "phone": "0977882211",
+  "email": "info@jumbo.com",
+  "address": "New HQ, Lusaka",
+  "is_active": true
+}

@@ -283,7 +283,6 @@ class Contractor(models.Model):
     email = models.EmailField(null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

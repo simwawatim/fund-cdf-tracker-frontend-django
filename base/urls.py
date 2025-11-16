@@ -1,6 +1,7 @@
 from django.urls import path
 from api.views.change_password import change_password
 from api.views.comment_views import project_comment_detail, project_comments_list_create
+from api.views.contractor_views import contractor_detail, contractor_list_create
 from api.views.forget_password_views import PasswordResetConfirmView, PasswordResetRequestView
 from api.views.graph_view import stats_overview
 from api.views.project_views import financial_report_detail, financial_report_list, project_detail, project_document_detail, project_document_list, project_list, project_update_detail, project_update_list
@@ -78,4 +79,9 @@ urlpatterns = [
     #Password RestEnpoints
     path("api/password-reset/", PasswordResetRequestView.as_view(), name="api-password-reset"),
     path("api/password-reset-confirm/", PasswordResetConfirmView.as_view(), name="api-password-reset-confirm"),
+
+    #Contractor Endpoints
+    path("api/contractors/v1", contractor_list_create, name="contractor_list_create"),
+    path("api/contractors/v1/<int:pk>/", contractor_detail, name="contractor_detail"),
+
 ]

@@ -75,6 +75,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if value not in ['admin', 'officer', 'viewer']:
             raise serializers.ValidationError("Invalid role selected.")
         return value
+    
+    def validate(self, attrs):
+        role = attrs.get('role')
+        constituency = attrs.get('constituency')
+        if role == 'officer' and constituency:
+            instance = getattr(self, 'instance', None)
+            qs = UserProfile.objects.filter(role='officer', constituency=constituency)
+            if instance:
+                qs = qs.exclude(pk=instance.pk) 
+
+            if qs.exists():
+                raise serializers.ValidationError({
+                    "constituency": f"Constituency {constituency.name} already has an officer."
+                })
+        return attrs
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')

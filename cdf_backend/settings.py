@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'base'
+    'base',
+    'csp',
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -146,6 +148,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CURRENT_DOMAIN = "http://localhost:8000/"
 FRONTEND_URL = "http://localhost:3000"
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "frame-ancestors": ("'self'", "http://localhost:3000"),
+    }
+}
+
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

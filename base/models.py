@@ -142,6 +142,7 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     constituency = models.ForeignKey(Constituency, on_delete=models.CASCADE, related_name='projects')
     program = models.ForeignKey(Program, on_delete=models.CASCADE, null=True, blank=True)
+    contractor = models.ForeignKey("Contractor", on_delete=models.SET_NULL, null=True, blank=True, related_name="projects")
     description = models.TextField()
     allocated_budget = models.DecimalField(max_digits=12, decimal_places=2)
     actual_expenditure = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
@@ -273,3 +274,21 @@ class ProjectComment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.user} on {self.project.name}"
+
+
+class Contractor(models.Model):
+    name = models.CharField(max_length=200)
+    contact_person = models.CharField(max_length=200, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    address = models.CharField(max_length=300, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
